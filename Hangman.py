@@ -1,7 +1,7 @@
-''' Hangman Game v0.1 '''
+''' Hangman Game v1.0 '''
 
 import time
-import random
+from random import choice
 
 def gameBoard(num):
     if num == 0:
@@ -69,37 +69,52 @@ def gameBoard(num):
         print
         print('GAMEOVER')
 
-def count_letter(word):
-    count = 0
-    while count <= len(word):
-        count += 1
-    return count
-
 #########################################
 
-words = {"apple", "orange", "banana", "wisconsin", "cheese", "pie", "water"}
+word = choice(["apple", "orange", "banana", "wisconsin", "cheese", "pie", "water"])
 
-while True:
+guessed = []
+wrong = []
+num = 0
+turns = 30
 
-    user = raw_input('Play the Hangman game? Y|N ')
-    if user == 'Y' or user == 'y':
-        num = 0
-        secret_word = random.choice(words).lower()
-        real_word = count_letter(secret_word)
-        guess_word = []
-        for letter in secret_word:
-            guess_word.append(" - ")
-        while True:
-            gameBoard(num)
-            print(secret_word)
-            user_guess = raw_input('Guess a letter: ')
-            
-    elif user == 'N' or user == 'n':
-        print('Aborting now')
-        time.sleep(2)
+print(word)
+
+while turns > 0:
+    guess = ""
+    gameBoard(num)
+
+    for letter in word:
+        if letter in guessed:
+            guess = guess + letter
+        else:
+            guess = guess + "_"
+
+    print(guess)
+    print("Turns left: " + str(turns))
+    print
+
+    if guess == word:
+        print("GAME OVER, YOU WON!")
+        time.sleep(5)
         break
+        
+            
+    user = raw_input('Enter the letter: ').lower()
+
+    if user in guessed or user in wrong:
+        print('You already guessed this letter ' + user)
+    elif user in word:
+        print("Correct Letter " + user)
+        guessed.append(user)
     else:
-        print('Press something else? Please Try Again.')
+        print("Wrong Letter " + user)
+        wrong.append(user)
+        num += 1
+    
+    turns -= 1
+
+            
             
 
     
